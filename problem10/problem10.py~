@@ -1,0 +1,5 @@
+import prime
+
+primesList = prime.primesUnder(2000000)
+
+ans = sum(primesList)

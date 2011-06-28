@@ -1,0 +1,32 @@
+#!/usr/bin/env/python
+import math
+
+if __name__ == "__main__":
+    dummyList = [1,2,3,4]
+    a = listHasDivisor(dummyList, 13)
+    
+
+def elimFactor(x,d):
+    if(x % d != 0):
+        return x
+    else:
+        return elimFactor(x/d, d)
+
+def smallestDivisor(x):
+    i=2
+    while ((x%i) != 0):
+        i = i+1
+    return i
+
+def listHasDivisor(tries, number):
+    for x in tries:
+        if number % x == 0:
+            return true
+    return false
+    
+def nextPrime(curPrimesList):
+    last = curPrimesList[-1]
+    i=last + 1
+    while listHasDivisor(curPrimesList, last):
+        i= i+1
+    return i

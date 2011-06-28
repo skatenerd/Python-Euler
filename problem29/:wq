@@ -1,0 +1,29 @@
+import sys
+sys.path.append("..")
+import prime as p
+
+pList=primesUnder(1000)
+
+def getUFMap(x):
+	UFDict={}
+	for i in range(2,x):
+		temp=uniqeFactors.(i, pList)
+		if not(temp in UFDict):
+			UFDict[temp]=set()
+			UFDict[temp].add(i)
+	return temp.keys()
+
+
+
+def pairsSame(a,b):
+	baseA=a[0]
+	expA=a[1]
+	baseB=b[0]
+	expB=b[1]
+	aDict=p.getFactorDict(baseA, pList)
+	bDict=p.getFactorDict(baseb, pList)
+	for x in aDict:
+		aDict[x] *= expA
+	for x in bDict:
+		bDict[x] *= expB
+	return aDict==bDict

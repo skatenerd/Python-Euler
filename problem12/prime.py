@@ -1,0 +1,98 @@
+#!/usr/bin/env/python
+import math
+
+def elimFactor(x,d):
+    if(x % d != 0):
+        return x
+    else:
+        return elimFactor(x/d, d)
+
+def smallestDivisor(x):
+    i=2
+    while ((x%i) != 0):
+        i = i+1
+    return i
+
+
+def smallestDivisor2(x,s):
+    i=s
+    while ((x%i) != 0):
+        i = i+1
+    return i
+    
+
+def listHasDivisor(tries, number):
+    for x in tries:
+        if number % x == 0:
+            return 1
+    return 0
+
+def listHasFactor(tries,number):
+    root=math.sqrt(number)
+    for x in tries:
+        if number % x == 0:
+            return 1
+        if x>root:
+            return 0
+    return 0
+        
+    
+def nextPrime(curPrimesList):
+    last = curPrimesList[-1]
+    i=last + 1
+    while listHasFactor(curPrimesList, i):
+        i= i+1
+    return i
+
+def primesUnder(x):
+    curList=[2,3,5,7,11]
+    while curList[-1] < x:
+        curList.append(nextPrime(curList))
+    curList.pop()
+    return curList
+
+def findLargestFactor(x):
+    lastDivisor=x
+    while(x!=1):
+        lastDivisor = smallestDivisor(x)
+        x = elimFactor(x, lastDivisor)
+    return lastDivisor
+
+def numTimesDivides(x,d):
+    dExp=0
+    while x%d == 0:
+        x=x/d
+        dExp = dExp + 1
+    return dExp
+    
+def getFactorDict(x):
+    factorDict={}
+    curDivisor=2
+    while (x!=1):
+        curDivisor = smallestDivisor2(x,curDivisor)
+        maxPow = numTimesDivides(x,curDivisor)
+        factorDict[curDivisor]=maxPow
+##        print curDivisor
+##        print maxPow
+        x=x/(math.pow(curDivisor, maxPow))
+    return factorDict
+
+def numDivisors(x):
+    prod = 1
+    if(x%2!=0):
+        factorDict = getFactorDict(x)
+        for key in factorDict:
+            prod = prod * (factorDict[key]+1)
+    return prod
+
+if __name__ == "__main__":
+    toFactor = 2*2*3*5*5*5*7*7*7*7*11*13
+##    factorDict = getFactorDict(toFactor)
+##    print factorDict
+##    print numDivisors(toFactor)
+    print numTimesDivides(98,2)
+    print numTimesDivides(98,7)
+    print smallestDivisor2(49*11,2)
+    factorDict = getFactorDict(toFactor)
+    print factorDict
+    print len(factorDict)

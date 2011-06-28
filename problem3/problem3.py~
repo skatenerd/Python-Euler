@@ -1,0 +1,6 @@
+import prime
+toFactor = 600851475143
+divisor = prime.smallestDivisor(toFactor)
+trimmed = prime.elimFactor(toFactor, divisor)
+dummyList = [2,3,5]
+prime.listHasDivisor(dummyList, 9)
