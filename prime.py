@@ -243,12 +243,17 @@ def smartPrimesUnder(x):
 	#f.close
 	return ans
 
+def smartPrimesBetween(a,b):
+
+
+
 def elimMults(s,i,x):
 	t=i
 	while t <= x:
 		if t in s:
 			s.remove(t)
 		t+=i
+
 
 
 if __name__ == "__main__":
