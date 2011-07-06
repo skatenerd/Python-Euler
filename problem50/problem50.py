@@ -3,8 +3,9 @@ sys.path.append("..")
 import prime as p
 
 primesUnderMil=list(p.smartPrimesUnder(1000000))
-print len(primesUnderMil)
+#print len(primesUnderMil)
 primesUnderMil.sort()
+print "has finished computing primes under million.  now doing cool work"
 
 def getMaxConsecutiveSummands(sortedPotentialSummands, x,endOfInitInterval, sumOfInitInterval,m):
     curSum=sumOfInitInterval
@@ -21,12 +22,13 @@ def getMaxConsecutiveSummands(sortedPotentialSummands, x,endOfInitInterval, sumO
     
     while curEnd>(curStart+m) and curSum!=x:
         updates=shiftOver(curStart,curEnd,curSum,x, sortedPotentialSummands)
-        curStart=updates[0]
-        curEnd=updates[1]
-        curSum=updates[2]
+        curStart=updates["indOfFirstNum"]
+        curEnd=updates["indOfLastNum"]
+        curSum=updates["curSum"]
         
 
-    return [(curEnd-curStart)+1, initialTerminationInd,initialTerminationSum,curSum==x]
+#    return [(curEnd-curStart)+1, initialTerminationInd,initialTerminationSum,curSum==x]
+    return {"intLen":(curEnd-curStart)+1, "initTerminationInd":initialTerminationInd, "initTerminationSum":initialTerminationSum, "found":(curSum==x)}
 
 def shiftOver(a,b,s,x,sortedPotentialSummands):
     indOfNextPrime=b+1
@@ -44,7 +46,8 @@ def shiftOver(a,b,s,x,sortedPotentialSummands):
         curSum-=sortedPotentialSummands[indOfFirstNum]
         indOfFirstNum+=1
 
-    return [indOfFirstNum,indOfLastNum,curSum]
+    #return [indOfFirstNum,indOfLastNum,curSum]
+    return {"indOfFirstNum":indOfFirstNum,"indOfLastNum":indOfLastNum,"curSum":curSum}
         
         
         
@@ -59,20 +62,17 @@ initListSum=2
 winner=0
 for x in primesUnderMil:
     #print x
-    rtnVals=getMaxConsecutiveSummands(primesUnderMil,x,initListEndInd,initListSum,m)
-    curVal=rtnVals[0]
-    initListEndInd=rtnVals[1]
-    initListSum=rtnVals[2]
-    won=rtnVals[3]
+    rtnDict=getMaxConsecutiveSummands(primesUnderMil,x,initListEndInd,initListSum,m)
+    curVal=rtnDict["intLen"]
+    initListEndInd=rtnDict["initTerminationInd"]
+    initListSum=rtnDict["initTerminationSum"]
+    won=rtnDict["found"]
     if won and curVal > m:
         #print x
         #print curVal
         m=curVal
-        print m
+        #print m
         winner = x
-print m
+#print m
 
 print winner
-
-##print getMaxConsecutiveSummands(primesUnderMil, 41)
-
