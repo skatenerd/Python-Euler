@@ -5,13 +5,13 @@
 ##numbers at the non-variable indices.
 ##or maybe that is wrong.  who knows.
 
-##OBSERVATION:
-##i don't have to do anything fancy.
-##you might worry that i'm doing extra work,
-##checking if a number is the winner when i already know that it isn't.
-##This is wrong. Suppose you're worried that checking [1,4,*,*,2,1] is unnecessary,
-##that would mean that i had checked some other class of the form,
-##[A,B,*,*,C,D].  but whare are A,B,C,D other than 1,4,2,1?
+##POSSIBLE OPTIMIZATION:
+##Suppose that I examine the number [1,2,3,4,5,6], where indices [2,4]
+##are variable.  Then, i look at the numbers of the form [1,2,*,4,*,6].
+##If I examined the number [1,2,9,4,9,6] where indices [2,4] are varaible,
+##I would also be examining the class [1,2,*,4,*,6].  SO, if i were smart,
+##I would recognize that the pair ([1,2,4,6],[2,4]) was already used,
+##and not bother computing with it
 
 
 import sys
