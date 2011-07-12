@@ -47,7 +47,7 @@ class primeChecker:
     #this will be the information the checker uses to check primality
     def updtCurPrimes(self,maxVal):
         #print "doubling with" + str(self.max) + "and " +str(maxVal)
-        self.primeSet=self.primeSet.union(smartPrimesBetween(self.max,maxVal,self.primeSet))
+        self.primeSet=self.primeSet.union(p.smartPrimesBetween(self.max,maxVal,self.primeSet))
         self.max=max(self.primeSet)
         
     #check if the argument is prime!
