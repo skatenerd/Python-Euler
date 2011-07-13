@@ -37,7 +37,7 @@ found=False
 i=1
 while found==False:
     i+=1
-    toCheck=oneThroughSix[:]
+    toCheck=oneThroughSix
     toCheck=map(lambda x: x * i, toCheck)
     #print toCheck
     if arePerms(toCheck):
