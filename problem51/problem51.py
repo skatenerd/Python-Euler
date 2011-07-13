@@ -63,9 +63,14 @@ class numChangeEquivalenceClass:
         return rtnVal
     def isInEightPrimeFam(self):
         count=0
+        remaining=len(self.mElements)
         for x in self.mElements:
             if x in primes and x >= self.mSeed:
                 count +=1
+            remaining -= 1
+            if count + remaining <8:
+                #print "short circuit"
+                break
         if (count<8):
             return False
         else:
@@ -121,7 +126,6 @@ for x in range(1,7):
 
 
 #use pre existing stufff to SOLVE PROBLEM
-triedClasses=set()
 for curPrime in primes:
     found=False
     l=m.floor(m.log(curPrime,10))+1
@@ -129,16 +133,14 @@ for curPrime in primes:
     #print curPrime
     for indicesToChange in subs:
         curEQClass=numChangeEquivalenceClass(curPrime,indicesToChange)
-        if curEQClass not in triedClasses:
-            triedClasses.add(curEQClass.signature())        
-            if curEQClass.isInEightPrimeFam():
-                found=True
-                print curPrime
-                print indicesToChange
-                for x in curEQClass.mElements:
-                    if x in primes:
-                        print x
-                break
+        if curEQClass.isInEightPrimeFam():
+            found=True
+            print curPrime
+            print indicesToChange
+            for x in curEQClass.mElements:
+                if x in primes:
+                    print x
+            break
     if found:
         break
 
