@@ -19,6 +19,7 @@ sys.path.append("..")
 import math as m
 import prime as p
 import itertools as i
+import time
 #assume answer < 1000000
 primes=p.smartPrimesUnder(1000000)
 print "primes calculated.  starting cool stuff"
@@ -63,13 +64,15 @@ class numChangeEquivalenceClass:
         return rtnVal
     def isInEightPrimeFam(self):
         count=0
-        remaining=len(self.mElements)
-        for x in self.mElements:
-            if x in primes and x >= self.mSeed:
+        misses=0
+        greaterThanSeedElts=filter(lambda(x):x>=self.mSeed,self.mElements)
+        for x in greaterThanSeedElts:
+            if x in primes:
                 count +=1
-            remaining -= 1
-            if count + remaining <8:
-                #print "short circuit"
+            else:
+                misses+=1
+            if misses > 2:
+                #short circuit!
                 break
         if (count<8):
             return False
@@ -124,7 +127,7 @@ def getProperSubsets(l):
 for x in range(1,7):
     properSubsetsDict[x]=getProperSubsets(range(x))
 
-
+startTime=time.clock()
 #use pre existing stufff to SOLVE PROBLEM
 for curPrime in primes:
     found=False
@@ -144,7 +147,8 @@ for curPrime in primes:
     if found:
         break
 
-
+endTime=time.clock()
+print startTime-endime
 ###sanity checks:
 ##foo=numChangeEquivalenceClass(56003,[2,3])
 ##print foo.mElements
