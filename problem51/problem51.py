@@ -148,7 +148,7 @@ for curPrime in primes:
         break
 
 endTime=time.clock()
-print startTime-endime
+print startTime-endTime
 ###sanity checks:
 ##foo=numChangeEquivalenceClass(56003,[2,3])
 ##print foo.mElements
