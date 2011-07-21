@@ -1,13 +1,21 @@
 ##fun stuff with MAP and FOLD
+
+
+#takes two integers.
+#returns TRUE if the digits
+#in frst are a permutation of the digits in sec
 def arePerms(frst,sec):
     frstDict=getDictFromNum(frst)
     secDict=getDictFromNum(sec)
     return frstDict==secDict
 
-def arePerms(args):
-    args=map(getDictFromNum, args)
+#takes a list of integers.
+#returns TRUE if all of the integers'
+#digits are permutations of each other
+def arePerms(numbers):
+    digitsDictList=map(getDictFromNum, numbers)
     #print args
-    masterDict=reduce(equalsForFold,args)
+    masterDict=reduce(equalsForFold,digitsDictList)
     if(masterDict):
         return True
     else:
@@ -20,6 +28,12 @@ def equalsForFold(a,b):
         return False
 
 
+#takes an integer.
+#returns a dictionary mapping
+#a digit to the number of times that digit appears
+#note: I could use something like,
+#for d in str(x): ...,
+#but i figured this is probably faster?
 def getDictFromNum(x):
     rtnVal={}
     #print x

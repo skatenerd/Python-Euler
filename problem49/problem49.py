@@ -35,7 +35,7 @@ import prime as p
 ##    return rtnVal
 
 
-
+#this is a lazy doubling prime checker
 class primeChecker:
 
     def __init__(self,val):
@@ -86,8 +86,8 @@ class PermutationEquivClass:
             x/=10
         return rtnVal
     
-    #this should be in a library somewhere
-    #stolen from internet
+    #this should be in a library somewhere.
+    #I stole it from the internet
     def isNumeric(self, val):
         try:
             dummy=val + 1
@@ -159,10 +159,15 @@ class PermutationEquivClass:
     def permsHasSolution(self):
         diffSet=set()
         try:
+            #populate a set containing potential
+            #imcrements in arithmetic sequence!
             for x in self.primePermSet:
                 for y in self.primePermSet:
                     if x-y != 0:
                         diffSet.add(abs(x-y))
+            #use this set of potential increments:
+            #for each one, build an arithemtic progression
+            #and see if it's teh winnar
             for x in self.primePermSet:
                 for y in diffSet:
                     dummySet=set()
@@ -181,12 +186,26 @@ class PermutationEquivClass:
                 raise
         return False
                 
-                
-bar=primeChecker(2)
+
+#begin SCRIPTING
+
+def numberContainsZeroDigit(x):
+    rtnVal=False
+    for d in str(x):
+        if int(d)==0:
+            rtnVal= True
+    return rtnVal
+
+
+
+checker=primeChecker(2)
+knownAnswer=PermutationEquivClass(1487,bar)
 winnersSoFar=set()
+answer=-1
 for x in range(9871):
-    foo=PermutationEquivClass(x,bar)
-    if foo.permsHasSolution() and x not in winnersSoFar:
-        print x
-        winnersSoFar=winnersSoFar.union(set(foo.permsAsInts))
-        print winnersSoFar
+    foo=PermutationEquivClass(x,checker)
+    if foo.permsHasSolution():
+        if x not in knownAnswer.permsAsInts and not numberContainsZeroDigit(x):
+            answer=foo
+            break
+print [z for z in answer.permsAsInts if checker.isPrime(z)]
