@@ -10,8 +10,9 @@
 import math as m
 
 
-#implement choose function
+
 def choose(a,b):
+    #implement choose function
     numerator=m.factorial(a)
     denominator=m.factorial(b) * m.factorial(a-b)
     return numerator/denominator
@@ -27,14 +28,14 @@ ans=0
 for i in range(101):
     j=0
     #curContribution starts out as all of the values in [0,i]
-    curContribution=i+1
+    cur_contribution=i+1
     while j<=(i/2) and choose(i,j)<=1000000:
         #each time we find that (i,j)<=1000000,
         #we eliminate (j) and (n-j)
         j+=1
-        curContribution -=2
-    if curContribution > 0:
-        ans += curContribution
+        cur_contribution -=2
+    if cur_contribution > 0:
+        ans += cur_contribution
 
     
 print "answer is: " + str(ans)

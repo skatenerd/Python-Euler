@@ -8,7 +8,8 @@
 
 ##OPTIMIZATION EMPLOYED:
 ##Suppose that I come across the number [1,2,3,4,5,6], where indices [2,4]
-##are variable.  Then, i will look at the numbers of the form [1,2,*,4,*,6].
+##are variable.  Then, i will look at the numbers of the form [1,2,*,4,*,6],
+##checking for an 8-prime-family.
 ##If I later examine the number [1,2,9,4,9,6] where indices [2,4] are varaible,
 ##I would also be examining the class [1,2,*,4,*,6].  SO, if i were smart,
 ##I would recognize that the pair ([1,2,4,6],[2,4]) was already used,
@@ -27,68 +28,88 @@ import time
 primes=p.smartPrimesUnder(1000000)
 print "primes calculated.  starting cool stuff"
 
-#(equivalence)CLASS definition:
-#EXAMPLE:
-#for the class [1,2,*,4,*,6], we will have
-#mVarIndices=[2,4]
-#and mDigitList=[1,2,-1,4,-1,6].
-#mElements is everything in {1,2,*,4,*,6]
-class numChangeEquivalenceClass:
-    def __init__(self,seed,varIndices):
-        #seed, in conjunction with varIndices, defines the class
-        self.mSeed=seed
-        self.mVarIndices=varIndices
-        self.mDigitList=self.getDigitList(seed,varIndices)
-        self.mElements=self.getElements()
 
-    #figure out the members of [1,2,*,4,*,6]
+class NumChangeEquivalenceClass:
+    """
+    (equivalence)CLASS definition:
+
+    EXAMPLE:
+    For the class [1,2,*,4,*,6], we will have:
+    var_indices=[2,4]
+    and digit_list=[1,2,-1,4,-1,6].
+    elements is everything in {1,2,*,4,*,6]
+    """
+
+
+    def __init__(self,seed,var_indices):
+        """seed, in conjunction with var_indices, defines the class"""
+        self._seed=seed
+        self.var_indices=var_indices
+        self.digit_list=self.getDigitList(seed,var_indices)
+        self.elements=self.getElements()
+
+
     def getElements(self):
-        rtnVal=[]
+        """figure out the members of [1,2,*,4,*,6]"""
+        rtn_val=[]
         for x in range(10):
-            toAdd=self.mDigitList[:]
-            for i in self.mVarIndices:
+            toAdd=self.digit_list[:]
+            for i in self.var_indices:
                 toAdd[i]=x
-            rtnVal.append(self.listToNum(toAdd))
-        return rtnVal
+            rtn_val.append(self.listToNum(toAdd))
+        return rtn_val
     
-    #turn a list of integers to the corresponding number
-    #[1,2,3]->123
+    
     def listToNum(self,l):
-        rtnVal=0
+        """
+        turn a list of integers to the corresponding number
+        [1,2,3]->123
+        """
+
+        rtn_val=0
         i=0
         while i < len(l):
-            rtnVal *= 10
-            rtnVal += l[i]
+            rtn_val *= 10
+            rtn_val += l[i]
             i+=1
-        return rtnVal
+        return rtn_val
 
-    #get a list of the static digits from the seed
-    #and varIndices constructor args
-    def getDigitList(self,seed,varIndices):
-        rtnVal=self.getListFromNum(seed)
-        for x in self.mVarIndices:
-            rtnVal[x]=-1
-        return rtnVal
+    
+    def getDigitList(self,seed,var_indices):
+        """
+        get a list of the static digits from the seed
+        and var_indices constructor args
+        """
+        rtn_val=self.get_list_from_num(seed)
+        for x in self.var_indices:
+            rtn_val[x]=-1
+        return rtn_val
 
-    #turn an integer to a list of digits
-    #123->[1,2,3]
-    def getListFromNum(self,x):
-        rtnVal=[]
+    
+    def get_list_from_num(self,x):
+        """
+        turn an integer to a list of digits
+        123->[1,2,3]
+        """
+        rtn_val=[]
         while x>0:
-            curNum=x%10
-            rtnVal.insert(0,curNum)
+            cur_num=x%10
+            rtn_val.insert(0,cur_num)
             x/=10
-        return rtnVal
+        return rtn_val
 
-    #check if the current equivalence class is the winner.
-    #iterate through mElements,
-    #counging how many primes exist.
-    def isInEightPrimeFam(self):
+    
+    def is_in_eight_prime_fam(self):
+        """
+        check if the current equivalence class is the winner.
+        iterate through elements,
+        counging how many primes exist.
+        """
         count=0
         misses=0
-        greaterThanSeedElts=filter(lambda(x):x>=self.mSeed,self.mElements)
+        greater_than_seed_elts=filter(lambda(x):x>=self._seed,self.elements)
         #begin counting primes
-        for x in greaterThanSeedElts:
+        for x in greater_than_seed_elts:
             if x in primes:
                 count +=1
             else:
@@ -102,75 +123,69 @@ class numChangeEquivalenceClass:
         else:
             return True
 
-    #analogous to isInEightPrimeFam, non-optimized.
-    def isInSevenPrimeFam(self):
-        count=0
-        for x in self.mElements:
-            if x in primes:
-                count +=1
-        if (count<7):
-            return False
-        else:
-            return True
 
-    #return a tuple containing the static digits and a list of
-    #variable indices.  this uniquely defines the class
+    
     def signature(self):
-        staticDigits=[]
-        for x in self.mDigitList:
+        """
+        return a tuple containing the static digits and a list of
+        variable indices.  this uniquely defines the class
+        """
+        static_digits=[]
+        for x in self.digit_list:
             if x >=0:
-                staticDigits.append(x)
-        numRepresentingStaticDigits=self.listToNum(staticDigits)
-        return (numRepresentingStaticDigits,self.mVarIndices[:])
+                static_digits.append(x)
+        num_representing_static_digits=self.listToNum(static_digits)
+        return (num_representing_static_digits,self.var_indices[:])
 
 
 #begin SCRIPTING
 
 #make a dictionary where key N maps to
 #proper subsets of [1,2,...N]
-indicesList=[0,1,2,3,4,5,6]
-properSubsetsDict={}
+indices_list=[0,1,2,3,4,5,6]
+proper_subsets_dict={}
 
 
 
-#get the proper subsets of a list
-def getProperSubsets(l):
+
+def get_proper_subsets(l):
+    """get the proper subsets of a list"""
     length=len(l)
-    rtnVal=[]
+    rtn_val=[]
     for x in range(1,length):
-        curIterator=i.combinations(l,x)
-        for y in curIterator:
-            rtnVal.append(y)
-    return rtnVal
+        cur_iterator=i.combinations(l,x)
+        for y in cur_iterator:
+            rtn_val.append(y)
+    return rtn_val
 
 
-#properSubsetsDict maps a length "l" to all subsets of the list "range(l)"
+#proper_subsets_dict maps a length "l" to all subsets of the list "range(l)"
 for x in range(1,7):
-    properSubsetsDict[x]=getProperSubsets(range(x))
+    proper_subsets_dict[x]=get_proper_subsets(range(x))
 
-startTime=time.clock()
+start_time=time.clock()
 #use pre existing stufff to SOLVE PROBLEM
 found=False
-for curPrime in primes:
+for cur_prime in primes:
     #for each prime in the prime list,
     #look for all of the potential eight-prime families
     #by swapping out subsets of its digits.
-    l=m.floor(m.log(curPrime,10))+1
-    subs=properSubsetsDict[l]
-    for indicesToChange in subs:
-        #take curPrime and indicesToChage, and generate
+    l=m.floor(m.log(cur_prime,10))+1
+    subs=proper_subsets_dict[l]
+    for indices_to_change in subs:
+        #take cur_prime and indicesToChage, and generate
         #an object to represent the equivalence class
-        curEQClass=numChangeEquivalenceClass(curPrime,indicesToChange)
-        if curEQClass.isInEightPrimeFam():
+        cur_EQ_class=NumChangeEquivalenceClass(cur_prime,indices_to_change)
+        if cur_EQ_class.is_in_eight_prime_fam():
             found=True
-            print curPrime
-            print indicesToChange
-            for x in curEQClass.mElements:
+            print cur_prime
+            print indices_to_change
+            for x in cur_EQ_class.elements:
                 if x in primes:
                     print x
             break
     if found:
         break
 
-endTime=time.clock()
-print endTime-startTime
+end_time=time.clock()
+print end_time-start_time

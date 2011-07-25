@@ -30,20 +30,23 @@ print "has finished computing primes under million.  now doing cool work"
 
 def getMaxConsecutiveSummands(sortedPotentialSummands,
                               x,
-                              endOfInitInterval,
-                              sumOfInitInterval):
-    curSum=sumOfInitInterval
-    curStart=0
-    curEnd=endOfInitInterval
-    while curSum + sortedPotentialSummands[curEnd+1] <=  x:
-        curEnd+=1
-        curSum+=sortedPotentialSummands[curEnd]
-    initialTerminationInd=curEnd
-    initialTerminationSum=curSum
+                              sumOfConsecPrimes,
+                              curMaxConsecPrimes):
 
+    #print sumOfConsecPrimes
+    #curSum=sumOfInitInterval
+    curStart=0
+    #curEnd=endOfInitInterval
+
+    sumOfConsecPrimes=updtSumOfConsecPrimes(x,
+                                            sumOfConsecPrimes,
+                                            sortedPotentialSummands)
+    curEnd=sumOfConsecPrimes[0]
+    curSum=sumOfConsecPrimes[1]
+    
 
     
-    while curEnd>(curStart+m) and curSum!=x:
+    while (curEnd-curStart) > curMaxConsecPrimes and curSum!=x:
         updates=shiftOver(curStart,curEnd,curSum,x, sortedPotentialSummands)
         curStart=updates["indOfFirstNum"]
         curEnd=updates["indOfLastNum"]
@@ -51,9 +54,21 @@ def getMaxConsecutiveSummands(sortedPotentialSummands,
         
 
     return {"intLen":(curEnd-curStart)+1,
-            "initTerminationInd":initialTerminationInd,
-            "initTerminationSum":initialTerminationSum,
+            "sumOfConsecPrimes":sumOfConsecPrimes,
             "found":(curSum==x)}
+
+def updtSumOfConsecPrimes(x,sumOfConsecPrimes, sortedPotentialSummands):
+    curEnd=sumOfConsecPrimes[0]
+    curSum=sumOfConsecPrimes[1]
+    
+    while curSum + sortedPotentialSummands[curEnd+1] <=  x:
+        curEnd+=1
+        curSum+=sortedPotentialSummands[curEnd]
+        #print (x,curSum)
+    return(curEnd,curSum)
+
+
+
 
 def shiftOver(a,b,s,x,sortedPotentialSummands):
     indOfNextPrime=b+1
@@ -81,18 +96,16 @@ def shiftOver(a,b,s,x,sortedPotentialSummands):
     
 
 #begin SCRIPTING
-maxLen=0
-initListEndInd=0
-initListSum=2
+curMaxConsecPrimes=0
+sumOfFrstConsecPrimes=(0,2)
 winner=0
 for x in primesUnderMil:
-    rtnDict=getMaxConsecutiveSummands(primesUnderMil,x,initListEndInd,initListSum)
+    rtnDict=getMaxConsecutiveSummands(primesUnderMil,x,sumOfFrstConsecPrimes, curMaxConsecPrimes)
     curConsecPrimesLen=rtnDict["intLen"]
-    initListEndInd=rtnDict["initTerminationInd"]
-    initListSum=rtnDict["initTerminationSum"]
+    sumOfFrstConsecPrimes=rtnDict["sumOfConsecPrimes"]
     won=rtnDict["found"]
-    if won and curConsecPrimesLen > maxLen:
-        maxLen=curConsecPrimesLen
+    if won and curConsecPrimesLen > curMaxConsecPrimes:
+        curMaxConsecPrimes=curConsecPrimesLen
         winner = x
 
 print winner
