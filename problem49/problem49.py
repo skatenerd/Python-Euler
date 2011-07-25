@@ -199,7 +199,7 @@ def numberContainsZeroDigit(x):
 
 
 checker=primeChecker(2)
-knownAnswer=PermutationEquivClass(1487,bar)
+knownAnswer=PermutationEquivClass(1487,checker)
 winnersSoFar=set()
 answer=-1
 for x in range(9871):
