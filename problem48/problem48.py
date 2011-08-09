@@ -10,29 +10,20 @@ def lastTenAdd(a,b):
     s = shA + shB
     return s % 10000000000    
 
-def agnostNToN(n, f):
-    toFold = popList(n,n)
-    rtnVal = reduce(f, toFold)
+#makes functions which map n->n^n.
+#according to some notion of multiplication
+def nToNFactory(multiplier):
+    rtnVal=lambda n:reduce(multiplier,[n]*n)
     return rtnVal
 
-def nToNFactory(f):
-    rtnVal = lambda n:agnostNToN(n,f)
-    return rtnVal
-
-def popList(length, initVal):
-    rtnVal = [initVal] * length
-    return rtnVal
-
-
+#z is a function that maps n->n^n where
+#we use lastTenMult instead of traditional multiplication
 z=nToNFactory(lastTenMult)
 
 r=range(1,1001)
 
-#print r
-
+#s is a list where s[i]=i^i according to last-ten-digit multiplication
 s = map(z, r)
-
-#print s
 
 ans = reduce(lastTenAdd, s)
 

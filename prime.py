@@ -93,7 +93,7 @@ def findLargestFactor(x):
 def numTimesDivides(x,d):
     dExp=0
     while x%d == 0:
-        x=x/d
+        d*=d
         dExp = dExp + 1
     return dExp
     
@@ -122,7 +122,7 @@ def getFactorDict(x,L):
             if x % d == 0:
                 maxPow = numTimesDivides(x, d)
                 factorDict[d] = maxPow
-                x = x/(math.pow(d,maxPow))
+                x = x/(d**maxPow)
     return factorDict
 
 #def getSetP(p,x):
@@ -162,7 +162,7 @@ def numDivisors(x):
             prod = prod * (factorDict[key]+1)
     return prod
 
-
+#something about a cartesian product
 def getRevCP(L, curArr):
     rtnVal = []
     if L==[]:

@@ -1,4 +1,4 @@
-##The task here is to take a prime number,P, and determine
+5##The task here is to take a prime number,P, and determine
 ##the maximum number of consecutive primes which sum to P.
 ##41=[2+3+5+7+11+13].
 
@@ -25,57 +25,70 @@ primesUnderMil.sort()
 print "has finished computing primes under million.  now doing cool work"
 
 
-#calculats the maximum number consecutive summands in sortedPotentialSummands,
-#which sum to x.
 
-def getMaxConsecutiveSummands(sortedPotentialSummands,
+def getMaxConsecutiveSummands(sortedSummands,
                               x,
-                              sumOfConsecPrimes,
+                              sumOfFirstNSummands,
                               curMaxConsecPrimes):
-
-    #print sumOfConsecPrimes
-    #curSum=sumOfInitInterval
-    curStart=0
-    #curEnd=endOfInitInterval
-
-    sumOfConsecPrimes=updtSumOfConsecPrimes(x,
-                                            sumOfConsecPrimes,
-                                            sortedPotentialSummands)
-    curEnd=sumOfConsecPrimes[0]
-    curSum=sumOfConsecPrimes[1]
-    
+    #This function calculats the maximum number consecutive summands
+    #in sortedSummands, which sum to x.
+    #Arg sumOfFirstNSummands is a tuple representing the sum of some consecutive
+    #summands summing to less than "x"
+    #Arg curMaxConsecPrimes represents the current "best" answer to the problem.
 
     
-    while (curEnd-curStart) > curMaxConsecPrimes and curSum!=x:
-        updates=shiftOver(curStart,curEnd,curSum,x, sortedPotentialSummands)
-        curStart=updates["indOfFirstNum"]
-        curEnd=updates["indOfLastNum"]
+    curStartIdx=0
+    
+    #tack on as many possible primes to the end
+    #so that we have the most primes whose sum is less than "x".
+    sumOfFirstNSummands=updtsumOfFirstNSummands(x,
+                                            sumOfFirstNSummands,
+                                            sortedSummands)
+    curEndIdx=sumOfFirstNSummands[0]
+    curSum=sumOfFirstNSummands[1]
+    
+
+    #continually "push over" our trial interview,
+    #tacking primes on the end and taking them off the front
+    while (curEndIdx-curStartIdx) > curMaxConsecPrimes and curSum!=x:
+        updates=shiftOver(curStartIdx,curEndIdx,curSum,x, sortedSummands)
+        curStartIdx=updates["indOfFirstNum"]
+        curEndIdx=updates["indOfLastNum"]
         curSum=updates["curSum"]
         
 
-    return {"intLen":(curEnd-curStart)+1,
-            "sumOfConsecPrimes":sumOfConsecPrimes,
+    return {"intLen":(curEndIdx-curStartIdx)+1,
+            "sumOfFirstNSummands":sumOfFirstNSummands,
             "found":(curSum==x)}
 
-def updtSumOfConsecPrimes(x,sumOfConsecPrimes, sortedPotentialSummands):
-    curEnd=sumOfConsecPrimes[0]
-    curSum=sumOfConsecPrimes[1]
+
+
+def updtsumOfFirstNSummands(x,sumOfFirstNSummands, sortedSummands):
+    #return a tuple representing the most (consecutive) primes
+    #whose sum is less than x
     
-    while curSum + sortedPotentialSummands[curEnd+1] <=  x:
+    curEnd=sumOfFirstNSummands[0]
+    curSum=sumOfFirstNSummands[1]
+    
+    while curSum + sortedSummands[curEnd+1] <=  x:
         curEnd+=1
-        curSum+=sortedPotentialSummands[curEnd]
+        curSum+=sortedSummands[curEnd]
         #print (x,curSum)
     return(curEnd,curSum)
 
 
 
 
-def shiftOver(a,b,s,x,sortedPotentialSummands):
+def shiftOver(a,b,s,x,sortedSummands):
+    #"push over" our trial interval, by tacking a prime on the end
+    #and removing primes from the front (looking for an interval that
+    #sums to x)
+    
     indOfNextPrime=b+1
     indOfFirstNum=a
     indOfLastNum=b
     curSum=s
-    toAdd=sortedPotentialSummands[indOfNextPrime]
+    toAdd=sortedSummands[indOfNextPrime]
 
     indOfLastNum+=1
     curSum += toAdd
@@ -83,7 +96,7 @@ def shiftOver(a,b,s,x,sortedPotentialSummands):
 
     #optimize me
     while curSum > x:
-        curSum-=sortedPotentialSummands[indOfFirstNum]
+        curSum-=sortedSummands[indOfFirstNum]
         indOfFirstNum+=1
         
     return {"indOfFirstNum":indOfFirstNum,
@@ -102,7 +115,7 @@ winner=0
 for x in primesUnderMil:
     rtnDict=getMaxConsecutiveSummands(primesUnderMil,x,sumOfFrstConsecPrimes, curMaxConsecPrimes)
     curConsecPrimesLen=rtnDict["intLen"]
-    sumOfFrstConsecPrimes=rtnDict["sumOfConsecPrimes"]
+    sumOfFrstConsecPrimes=rtnDict["sumOfFirstNSummands"]
     won=rtnDict["found"]
     if won and curConsecPrimesLen > curMaxConsecPrimes:
         curMaxConsecPrimes=curConsecPrimesLen

@@ -18,10 +18,7 @@ class PrimesGod:
                     if(p<x) and x%p == 0:
                             uf.add(p)
             return uf
-
-
-
-
+        
     def passthru(self):
         candidate=2
         while True:
@@ -33,11 +30,6 @@ class PrimesGod:
     def __iter__(self):
         #return self.next()
         return self.passthru()
-##
-##    def next(self):
-##        for x in self.passthru([]):
-##            yield x
-
 
 
 def isPrime(t,godObj):
